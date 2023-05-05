@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comic Database</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+<thead>
+  <tr>
+    <th>
+      <a href="?sort_by=id{{ toggle_sort_order('id') }}">
+        ID{% if sort_by == 'id' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=title{{ toggle_sort_order('title') }}">
+        Title{% if sort_by == 'title' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th class="nowrap">
+      <a href="?sort_by=publication_date{{ toggle_sort_order('publication_date') }}">
+        Publication Date{% if sort_by == 'publication_date' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=publisher{{ toggle_sort_order('publisher') }}">
+        Publisher{% if sort_by == 'publisher' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=category{{ toggle_sort_order('category') }}">
+        Category{% if sort_by == 'category' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=score{{ toggle_sort_order('score') }}">
+        Score{% if sort_by == 'score' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th class="nowrap">
+      <a href="?sort_by=last_read{{ toggle_sort_order('last_read') }}">
+        Last Read{% if sort_by == 'last_read' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=writer{{ toggle_sort_order('writer') }}">
+        Writer{% if sort_by == 'writer' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=artist{{ toggle_sort_order('artist') }}">
+        Artist{% if sort_by == 'artist' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+    <th>
+      <a href="?sort_by=editor{{ toggle_sort_order('editor') }}">
+        Editor{% if sort_by == 'editor' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+        <th>
+      <a href="?sort_by=comment{{ toggle_sort_order('comment') }}">
+        Editor{% if sort_by == 'comment' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+      </a>
+    </th>
+  </tr>
+</thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ row[0] }}</td>
+              <td>{{ row[1] }}</td>
+              <td>{{ row[2] }}</td>
+              <td>{{ row[3] }}</td>
+              <td>{{ row[4] }}</td>
+              <td>{{ row[5] }}</td>
+              <td>{{ row[6] }}</td>
+              <td>{{ row[7] }}</td>
+              <td>{{ row[8] }}</td>
+              <td>{{ row[9] }}</td>
+              <td>{{ row[10] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="pagination">
+          <a href="#" class="btn btn-primary">Previous</a>
+          <a href="#" class="btn btn-primary">1</a>
+          <a href="#" class="btn btn-primary">2</a>
+          <a href="#" class="btn btn-primary">Next</a>
+        </div>
+       <div class="form-inline">
+        <label for="recordsPerPage">Show</label>
+          <select class="form-control mx-2" id="recordsPerPage" onchange="changeRecordsPerPage()">
+            <option value="50" {% if rows|length == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if rows|length == 100 %}selected{% endif %}>100</option>
+            <option value="500" {% if rows|length == 500 %}selected{% endif %}>500</option>
+            <option value="all" {% if rows|length == 0 %}selected{% endif %}>All</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+      function changeRecordsPerPage() {
+      var select = document.getElementById("recordsPerPage");
+      var value = select.value;
+      window.location.href = "/?limit=" + value;
+      }</script>
+    <script>
+      var sort_by = "{{ sort_by }}";
+      var sort_order = "{{ sort_order }}";
+      var column_headers = document.querySelectorAll("th[data-sort]");
+      var url = window.location.href.split('?')[0];
+
+      // Set the sorting icon based on the initial sort order
+      var initial_sort_icon = sort_order === "asc" ? "&#x25B2;" : "&#x25BC;";
+      var initial_sort_column = document.querySelector("th[data-sort='" + sort_by + "']");
+      initial_sort_column.innerHTML += " " + initial_sort_icon;
+
+      // Add event listeners to the column headers for sorting
+      column_headers.forEach(function(header) {
+      header.addEventListener("click", function() {
+      var sort_by = this.getAttribute("data-sort");
+
+      // Determine the new sort order
+      var new_sort_order = sort_order === "asc" ? "desc" : "asc";
+
+      // Build the new URL with the updated query string
+      var new_url = url + "?sort_by=" + sort_by + "&sort_order=" + new_sort_order;
+
+      // Redirect to the new URL
+      window.location.href = new_url;
+        });
+      });
+      </script>
+
+  </body>
+</html>
+

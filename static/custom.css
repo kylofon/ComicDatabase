@@ -1,0 +1,32 @@
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+  overflow-x: auto;
+  min-width: max-content;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+  width: 150px;
+}
+
+th:nth-child(11),
+td:nth-child(11) {
+  min-width: 200px;
+}
+
+.pagination {
+  margin-top: 20px;
+}
+
+.form-inline label {
+  margin-right: 5px;
+}

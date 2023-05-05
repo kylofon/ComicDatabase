@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comic Database</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th><a href="{{ url_for('sort', sort_by='ID') }}">ID</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Title') }}">Title</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Publication_Date') }}">Publication Date</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Publisher') }}">Publisher</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Category') }}">Category</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Score') }}">Score</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Last_Read') }}">Last Read</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Writer') }}">Writer</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Artist') }}">Artist</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Editor') }}">Editor</a></th>
+          <th><a href="{{ url_for('sort', sort_by='Comment') }}">Comment</a></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td>{{ row[1] }}</td>
+          <td class="date-cell">{{ row[2] }}</td>
+          <td>{{ row[3] }}</td>
+          <td>{{ row[4] }}</td>
+          <td>{{ row[5] }}</td>
+          <td class="date-cell">{{ row[6] }}</td>
+          <td>{{ row[7] }}</td>
+          <td>{{ row[8] }}</td>
+          <td>{{ row[9] }}</td>
+          <td>{{ row[10] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

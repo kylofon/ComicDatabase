@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comic Database</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
+  </head>
+  <body>
+    <div class="container-fluid">
+
+      <div class="row mt-3">
+        <div class="col-md-6 offset-md-3">
+          <!-- Search form -->
+<div class="search-form">
+    <form action="/" method="get">
+        <div class="form-row">
+            <div class="col">
+                <input type="text" name="query" class="form-control" placeholder="Search" value="{{ search_query }}">
+            </div>
+            <div class="col">
+                <select name="column" class="form-control">
+                    <option value="all" {% if search_column == 'all' %}selected{% endif %}>All columns</option>
+                    <option value="title" {% if search_column == 'title' %}selected{% endif %}>Title</option>
+                    <option value="publisher" {% if search_column == 'publisher' %}selected{% endif %}>Publisher</option>
+                    <option value="category" {% if search_column == 'category' %}selected{% endif %}>Category</option>
+                    <option value="writer" {% if search_column == 'writer' %}selected{% endif %}>Writer</option>
+                    <option value="artist" {% if search_column == 'artist' %}selected{% endif %}>Artist</option>
+                    <option value="editor" {% if search_column == 'editor' %}selected{% endif %}>Editor</option>
+                    <option value="comment" {% if search_column == 'comment' %}selected{% endif %}>Comment</option>
+                </select>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+        </div>
+      </div> 
+
+      <div class="table-responsive mt-3">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>
+                <a href="?sort_by=id{{ toggle_sort_order('id') }}">
+                ID{% if sort_by == 'id' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=title{{ toggle_sort_order('title') }}">
+                Title{% if sort_by == 'title' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th class="nowrap">
+                <a href="?sort_by=publication_date{{ toggle_sort_order('publication_date') }}">
+                Publication Date{% if sort_by == 'publication_date' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=publisher{{ toggle_sort_order('publisher') }}">
+                Publisher{% if sort_by == 'publisher' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=category{{ toggle_sort_order('category') }}">
+                Category{% if sort_by == 'category' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=score{{ toggle_sort_order('score') }}">
+                Score{% if sort_by == 'score' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th class="nowrap">
+                <a href="?sort_by=last_read{{ toggle_sort_order('last_read') }}">
+              Last Read{% if sort_by == 'last_read' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=writer{{ toggle_sort_order('writer') }}">
+              Writer{% if sort_by == 'writer' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=artist{{ toggle_sort_order('artist') }}">
+                Artist{% if sort_by == 'artist' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+              <th>
+                <a href="?sort_by=editor{{ toggle_sort_order('editor') }}">
+              Editor{% if sort_by == 'editor' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+              </a>
+              </th>
+              <th>
+                <a href="?sort_by=comment{{ toggle_sort_order('comment') }}">
+                Comment{% if sort_by == 'comment' %}{% if sort_order == 'asc' %}&uarr;{% else %}&darr;{% endif %}{% endif %}
+                </a>
+              </th>
+            </tr>
+          </thead>
+      
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ row[0] }}</td>
+              <td>{{ row[1] }}</td>
+              <td>{{ row[2] }}</td>
+              <td>{{ row[3] }}</td>
+              <td>{{ row[4] }}</td>
+              <td>{{ row[5] }}</td>
+              <td>{{ row[6] }}</td>
+              <td>{{ row[7] }}</td>
+              <td>{{ row[8] }}</td>
+              <td>{{ row[9] }}</td>
+              <td>{{ row[10] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        
+        </table>
+      </div>
+
+<div class="d-flex justify-content-center mt-3">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      {% if current_page > 1 %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('index', sort_by=sort_by, sort_order=sort_order, limit=limit, page=current_page-1) }}">Previous</a></li>
+      {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+      {% endif %}
+      
+      {% for page_num in range(1, total_pages+1) %}
+        {% if page_num == current_page %}
+        <li class="page-item active"><a class="page-link" href="#">{{ page_num }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('index', sort_by=sort_by, sort_order=sort_order, limit=limit, page=page_num) }}">{{ page_num }}</a></li>
+        {% endif %}
+      {% endfor %}
+      
+      {% if current_page < total_pages %}
+      <li class="page-item"><a class="page-link" href="{{ url_for('index', sort_by=sort_by, sort_order=sort_order, limit=limit, page=current_page+1) }}">Next</a></li>
+      {% else %}
+      <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+  <div class="form-inline">
+    <label for="recordsPerPage">Show</label>
+    <select class="form-control mx-2" id="recordsPerPage" onchange="changeRecordsPerPage()">
+      <option value="50" {% if limit == 50 %}selected{% endif %}>50</option>
+      <option value="100" {% if limit == 100 %}selected{% endif %}>100</option>
+      <option value="500" {% if limit == 500 %}selected{% endif %}>500</option>
+      <option value="all" {% if limit == 0 %}selected{% endif %}>All</option>
+    </select>
+  </div>
+</div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+      function changeRecordsPerPage() {
+      var select = document.getElementById("recordsPerPage");
+      var value = select.value;
+      window.location.href = "/?limit=" + value;
+      }</script>
+    <script>
+      var sort_by = "{{ sort_by }}";
+      var sort_order = "{{ sort_order }}";
+      var column_headers = document.querySelectorAll("th[data-sort]");
+      var url = window.location.href.split('?')[0];
+
+      // Set the sorting icon based on the initial sort order
+      var initial_sort_icon = sort_order === "asc" ? "&#x25B2;" : "&#x25BC;";
+      var initial_sort_column = document.querySelector("th[data-sort='" + sort_by + "']");
+      initial_sort_column.innerHTML += " " + initial_sort_icon;
+
+      // Add event listeners to the column headers for sorting
+      column_headers.forEach(function(header) {
+      header.addEventListener("click", function() {
+      var sort_by = this.getAttribute("data-sort");
+
+      // Determine the new sort order
+      var new_sort_order = sort_order === "asc" ? "desc" : "asc";
+
+      // Build the new URL with the updated query string
+      var new_url = url + "?sort_by=" + sort_by + "&sort_order=" + new_sort_order;
+
+      // Redirect to the new URL
+      window.location.href = new_url;
+        });
+      });
+      </script>
+<script>
+  function changeRecordsPerPage() {
+    var select = document.getElementById("recordsPerPage");
+    var value = select.value;
+    window.location.href = "/?limit=" + value;
+  }
+</script>
+<script>
+  var sort_by = "{{ sort_by }}";
+  var sort_order = "{{ sort_order }}";
+  var column_headers = document.querySelectorAll("th[data-sort]");
+  var url = window.location.href.split('?')[0];
+
+  // Set the sorting icon based on the initial sort order
+  var initial_sort_icon = sort_order === "asc" ? "&#x25B2;" : "&#x25BC;";
+  var initial_sort_column = document.querySelector("th[data-sort='" + sort_by + "']");
+  initial_sort_column.innerHTML += " " + initial_sort_icon;
+
+  // Add event listeners to the column headers for sorting
+  column_headers.forEach(function(header) {
+    header.addEventListener("click", function() {
+      var sort_by = this.getAttribute("data-sort");
+
+      // Determine the new sort order
+      var new_sort_order = sort_order === "asc" ? "desc" : "asc";
+
+      // Build the new URL with the updated query string
+      var new_url = url + "?sort_by=" + sort_by + "&sort_order=" + new_sort_order;
+
+      // Redirect to the new URL
+      window.location.href = new_url;
+    });
+  });
+</script>
+<script>
+  var searchInput = document.getElementById("searchInput");
+  var searchColumn = document.getElementById("searchColumn");
+  var searchButton = document.getElementById("searchButton");
+
+  // Enable the search button when there is input in the search field
+  searchInput.addEventListener("input", function() {
+    searchButton.disabled = (searchInput.value.trim() === "");
+  });
+
+  // Add event listener to the search button for filtering the table
+  searchButton.addEventListener("click", function() {
+    var searchQuery = searchInput.value.trim();
+    var searchColumnValue = searchColumn.value;
+
+    // Build the new URL with the updated query string
+    var new_url = window.location.origin + window.location.pathname + "?search=" + encodeURIComponent(searchQuery) + "&search_column=" + encodeURIComponent(searchColumnValue);
+
+    // Redirect to the new URL
+    window.location.href = new_url;
+  });
+</script>
+
+  </body>
+</html>
+
