@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Comic Database</title>
+    <link rel="stylesheet" href ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
+  </head>
+  <body>
+
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<div class="container">
+  <h2>Add New Comic</h2>
+  <hr>
+  <form action="{{ url_for('add_new') }}" method="POST">
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+      <div class="form-group">
+      <label for="publication_date">Publication Date:</label>
+      <input type="text" class="form-control" id="publication_date" name="publication_date" placeholder="YYYY-MM-DD">
+    </div>
+    <div class="form-group">
+      <label for="publisher">Publisher:</label>
+      <input type="text" class="form-control" id="publisher" name="publisher">
+    </div>
+    <div class="form-group">
+      <label for="category">Category:</label>
+      <input type="text" class="form-control" id="category" name="category">
+    </div>
+    <div class="form-group">
+      <label for="score">Score:</label>
+      <input type="text" class="form-control" id="score" name="score" placeholder="Example: 4">
+    </div>
+    <div class="form-group">
+      <label for="last_read">Last read:</label>
+      <input type="text" class="form-control" id="last_read" name="last_read" placeholder="YYYY-MM-DD">
+    </div>
+    <div class="form-group">
+      <label for="writer">Writer:</label>
+      <input type="text" class="form-control" id="writer" name="writer">
+    </div>
+    <div class="form-group">
+      <label for="artist">Artist:</label>
+      <input type="text" class="form-control" id="artist" name="artist">
+    </div>
+    <div class="form-group">
+      <label for="editor">Editor:</label>
+      <input type="text" class="form-control" id="editor" name="editor">
+    </div>
+    <div class="form-group">
+      <label for="comment">Comment:</label>
+      <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+
+  </body>
+</html>

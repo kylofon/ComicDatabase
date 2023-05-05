@@ -103,6 +103,33 @@ def sort():
     rows = get_sorted_rows_from_database(sort_by, sort_order)
     return render_template('index.html', rows=rows, sort_by=sort_by, sort_order=sort_order)
 
+@app.route('/add', methods=['GET', 'POST'])
+def add_new():
+    if request.method == 'POST':
+        title = request.form['title']
+        publication_date = request.form['publication_date']
+        publisher = request.form['publisher']
+        category = request.form['category']
+        score = request.form['score']
+        last_read = request.form['last_read']
+        writer = request.form['writer']
+        artist = request.form['artist']
+        editor = request.form['editor']
+        comment = request.form['comment']
+
+        conn = sqlite3.connect('Comics.sqlite')
+        c = conn.cursor()
+
+        c.execute('INSERT INTO comics (title, publication_date, publisher, category, score, last_read, writer, artist, editor, comment) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                  (title, publication_date, publisher, category, score, last_read, writer, artist, editor, comment))
+
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('index'))
+
+    return render_template('add_new.html')
+
 @app.context_processor
 def inject_toggle_sort_order():
     return dict(toggle_sort_order=toggle_sort_order)
